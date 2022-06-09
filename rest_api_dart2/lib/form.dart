@@ -203,21 +203,52 @@ class GetData extends StatelessWidget {
                               IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    dataProvider.deleteData(
-                                      snapshot.data[index]["id"].toString(),
-                                    );
-                                    Route route = MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangeNotifierProvider(
-                                                create: (context) =>
-                                                    HttpProvider(),
-                                                child: tampilanForm()));
-                                    Navigator.push(context, route);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Data Berhasil Dihapus"),
-                                      ),
-                                    );
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                              title: Text("CONFIRM"),
+                                              content: Text(
+                                                  "Are you sure to delete this data!"),
+                                              actions: [
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    print("Klik No");
+                                                    // pop = membuat lalu keluar
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("No"),
+                                                ),
+                                                FlatButton(
+                                                  onPressed: () {
+                                                    print("Klik Yes");
+
+                                                    dataProvider.deleteData(
+                                                      snapshot.data[index]["id"]
+                                                          .toString(),
+                                                    );
+                                                    Route route = MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ChangeNotifierProvider(
+                                                                create: (context) =>
+                                                                    HttpProvider(),
+                                                                child:
+                                                                    tampilanForm()));
+                                                    Navigator.push(
+                                                        context, route);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            "Data Berhasil Dihapus"),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text("Yes"),
+                                                )
+                                              ]);
+                                        });
                                   }),
                               IconButton(
                                   icon: Icon(Icons.edit),
@@ -393,21 +424,46 @@ class _UpdateDataState extends State<UpdateData> {
                 ),
                 color: Colors.blue,
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    dataProvider.updateData(
-                      IdSingleUser.id,
-                      dataValue.nim,
-                      dataValue.nama,
-                      dataValue.jk,
-                      dataValue.alamat,
-                      dataValue.jurusan,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Data Berhasil Update!"),
-                      ),
-                    );
-                  }
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            title: Text("CONFIRM"),
+                            content: Text("Are you sure to edit this data!"),
+                            actions: [
+                              FlatButton(
+                                onPressed: () {
+                                  print("Klik No");
+                                  // pop = membuat lalu keluar
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("No"),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  print("Klik Yes");
+                                  if (_formKey.currentState!.validate()) {
+                                    dataProvider.updateData(
+                                      IdSingleUser.id,
+                                      dataValue.nim,
+                                      dataValue.nama,
+                                      dataValue.jk,
+                                      dataValue.alamat,
+                                      dataValue.jurusan,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Data Berhasil Update!"),
+                                      ),
+                                    );
+
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: Text("Yes"),
+                              )
+                            ]);
+                      });
                 },
               ),
             ],
